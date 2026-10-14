@@ -290,7 +290,9 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 5 — The `<link>` partial
 
-- [ ] `views/feed-link.pug`, `bin/publish-template.js`, render test with `pug`.
+- [x] `views/feed-link.pug`, `bin/publish-template.js`, render test with `pug`.
+
+**Done 2026-10-14.** `bin/publish-template.js` is plugin-tags' with one template file; `package.json` has the `nera-feed` bin and the `publish-template` script. The partial reads `app.feeds[meta.lang || app.lang || 'en']` and renders one `link(rel='alternate' type=… href=… title=…)` per feed, nothing otherwise; it has no classes. `test/template.test.js` renders it inside a `doctype html` layout (pug writes `<link …>` without `/>` only under that doctype, as in a site's layout) and runs the bin in a throwaway site: first publish, an edited copy kept, `--force` overwriting it.
 
 ### Slice 6 — Integration test through core `run()`
 

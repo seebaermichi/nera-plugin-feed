@@ -1,0 +1,7 @@
+//- @nera-static/plugin-feed — <link rel="alternate"> to the feeds of the
+//- current page's language (ROADMAP D9). Include it in your layout's <head>:
+//-     include ../vendor/plugin-feed/feed-link
+//- Renders nothing when the page's language has no feed.
+- const feedLinks = (app.feeds || {})[meta.lang || app.lang || 'en'] || []
+each feed in feedLinks
+    link(rel='alternate' type=feed.type href=feed.href title=feed.title)
