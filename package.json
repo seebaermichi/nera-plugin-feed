@@ -1,0 +1,68 @@
+{
+    "name": "@nera-static/plugin-feed",
+    "version": "1.0.0",
+    "description": "A plugin for Nera static site generator to generate an Atom (or RSS 2.0) feed of a site's blog posts, one feed per language.",
+    "main": "index.js",
+    "scripts": {
+        "publish-template": "node ./bin/publish-template.js",
+        "lint": "eslint .",
+        "test": "vitest",
+        "prepare": "husky"
+    },
+    "type": "module",
+    "exports": {
+        ".": "./index.js"
+    },
+    "bin": {
+        "nera-feed": "./bin/publish-template.js"
+    },
+    "files": [
+        "bin",
+        "config",
+        "index.js",
+        "src",
+        "views",
+        "CHANGELOG.md"
+    ],
+    "keywords": [
+        "nera",
+        "nera-plugin",
+        "static-site-generator",
+        "feed",
+        "atom",
+        "rss",
+        "blog",
+        "syndication"
+    ],
+    "author": "Michael Becker",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/seebaermichi/nera-plugin-feed.git"
+    },
+    "bugs": {
+        "url": "https://github.com/seebaermichi/nera-plugin-feed/issues"
+    },
+    "homepage": "https://github.com/seebaermichi/nera-plugin-feed#readme",
+    "publishConfig": {
+        "access": "public"
+    },
+    "peerDependencies": {
+        "@nera-static/core": ">=4.13.0"
+    },
+    "engines": {
+        "node": "^20.19.0 || >=22.0.0"
+    },
+    "sideEffects": false,
+    "dependencies": {
+        "@nera-static/plugin-utils": "^1.6.1"
+    },
+    "devDependencies": {
+        "@nera-static/core": "^4.16.2",
+        "eslint": "^10.12.0",
+        "fast-xml-parser": "^5.11.2",
+        "husky": "^9.1.7",
+        "pug": "^3.0.4",
+        "vitest": "^5.0.4"
+    }
+}
