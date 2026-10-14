@@ -160,9 +160,11 @@ layouts:
 
 # More pages by logical href (without base_path). "*" matches any characters.
 include: []
+#   - /notes/*
 
 # Pages to leave out by logical href. A page can also set `feed: false`.
 exclude: []
+#   - /blog/drafts/*
 
 # Entries per feed, newest first.
 limit: 20
@@ -277,7 +279,9 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 2 — Package scaffold like the fleet
 
-- [ ] `package.json` (1.0.0, `bin` `nera-feed`, `publish-template`), lockfile from npm 10.9, `eslint.config.js`, `LICENSE`, `.husky/`, `.github/` (test, publish, dependabot, FUNDING), `.gitignore`, placeholder hooks + smoke test.
+- [x] `package.json` (1.0.0, `bin` `nera-feed`, `publish-template`), lockfile from npm 10.9, `eslint.config.js`, `LICENSE`, `.husky/`, `.github/` (test, publish, dependabot, FUNDING), `.gitignore`, placeholder hooks + smoke test.
+
+**Done 2026-10-14.** Copied from plugin-sitemap (its `publish.yml` is byte-identical to plugin-code-blocks', checked); dependencies as there plus `fast-xml-parser` (well-formedness checks) and `pug` (partial render test) as devDependencies, `@nera-static/core` `^4.16.2`. Lockfile from npm 10.9.4 on Node 22.22.0. The repo's `.gitignore` lacked `.nera-cache/` (where the plugin's tests and a local site build write) and `.playwright-mcp/`; both added in their own commit. The `bin` path is written `bin/publish-template.js` without `./`, because `npm publish` otherwise "cleans" it with a warning.
 
 ### Slice 3 — Pure builders
 

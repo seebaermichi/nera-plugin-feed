@@ -164,9 +164,11 @@ layouts:
 
 # More pages by logical href (without base_path). "*" matches any characters.
 include: []
+#   - /notes/*
 
 # Pages to leave out by logical href. A page can also set `feed: false`.
 exclude: []
+#   - /blog/drafts/*
 
 # Entries per feed, newest first.
 limit: 20
