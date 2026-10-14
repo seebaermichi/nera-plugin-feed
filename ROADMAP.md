@@ -42,10 +42,13 @@ A site adds the plugin, sets `origin` in `config/app.yaml`, writes its posts wit
         <published>2026-10-01T00:00:00Z</published>
         <updated>2026-10-05T00:00:00Z</updated>
         <summary type="text">The first post.</summary>
-        <content type="html">&lt;p&gt;Hi, see &lt;a href=&quot;https://example.com/about.html&quot;&gt;about&lt;/a&gt;.&lt;/p&gt;</content>
+        <content type="html">&lt;p&gt;Hi, see &lt;a href=&quot;https://example.com/about.html&quot;&gt;about&lt;/a&gt;.&lt;/p&gt;
+</content>
     </entry>
 </feed>
 ```
+
+(The line break before `</content>` is markdown-it's, which ends every block with a newline; the content is kept as rendered.)
 
 and `public/de/feed.xml` with the German posts (`xml:lang="de"`, its own `self` link and `id`). A page includes the partial in its `<head>` and gets the link for its own language:
 
@@ -296,7 +299,9 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 6 — Integration test through core `run()`
 
-- [ ] Throwaway sites built with core's `run()`: two languages without config, `base_path` + `format: both`, `content: summary`, no origin, the partial in a layout; byte-identical rebuild; every feed parsed.
+- [x] Throwaway sites built with core's `run()`: two languages without config, `base_path` + `format: both`, `content: summary`, no origin, the partial in a layout; byte-identical rebuild; every feed parsed.
+
+**Done 2026-10-14.** `test/integration.test.js` loads `index.js` as a local plugin (`plugins/feed/index.js` re-exporting it) with the partial published to `views/vendor/plugin-feed/`, and builds four sites with core 4.16.2's `run()`: a bilingual site without `config/feed.yaml` (exact `public/feed.xml` and `public/de/feed.xml`; `feed: false`, `noindex`, undated and layout-less posts absent, the undated one named in the only warning; each page's head links its own language's feed; a byte-identical second build), a `base_path: /sub/` site with the origin from canonical-links and `format: both` (every URL in all four files starts with `https://example.org/sub/` exactly once — links, ids, `href`/`src`/`srcset` in content, including an `src` already written with `/sub/`), a `content: summary` + `limit: 1` + per-language `title` site, and a site without an origin (one warning, no feed, no link). Every feed is checked with `expectWellFormed`. `test/helpers.js` is plugin-sitemap's (`build`, `tempDir` with cleanup, `write`) with the `nera-feed-` prefix; no temp dir is left behind.
 
 ### Slice 7 — README, CHANGELOG, release preparation
 
@@ -324,7 +329,7 @@ Public contract: the config keys and their defaults, the output paths, the XML s
 ## Acceptance criteria
 
 - [x] The repo has its own `ROADMAP.md` as the plugin's spec (L8 points to it — the pointer in `nera-cli/ROADMAP-ai.md` is part of the release handover).
-- [ ] A site depending on the plugin gets one valid Atom feed per language with absolute, escaped, `base_path`-aware URLs, RSS 2.0 on request (slice 6's integration test).
-- [ ] Pages link their language's feed through the published partial (D9).
+- [x] A site depending on the plugin gets one valid Atom feed per language with absolute, escaped, `base_path`-aware URLs, RSS 2.0 on request (slice 6's integration test).
+- [x] Pages link their language's feed through the published partial (D9).
 - [ ] The package matches the fleet (CI workflows, LICENSE, README linking nera.js.org, CHANGELOG, `files`).
 - [ ] The PLUGINS.md and three website catalog entries are prepared for the release handover (slice 7).
