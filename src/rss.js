@@ -18,18 +18,25 @@ export const RSS_TYPE = 'application/rss+xml'
 
 const text = (indent, name, value) => `${indent}<${name}>${escapeXml(value)}</${name}>`
 
+// Plain text (not HTML) in an element RSS readers may treat as HTML:
+// `&` and `<` as hexadecimal character references, as the RSS Best
+// Practices Profile asks and the W3C Feed Validator checks (D7).
+const plain = (indent, name, value) => `${indent}<${name}>${escapeXml(value)
+    .replace(/&amp;/g, '&#x26;')
+    .replace(/&lt;/g, '&#x3C;')}</${name}>`
+
 function itemLines(entry) {
     const lines = [
         '        <item>',
-        text('            ', 'title', entry.title),
+        plain('            ', 'title', entry.title),
         text('            ', 'link', entry.url),
         `            <guid isPermaLink="true">${escapeXml(entry.url)}</guid>`,
         `            <pubDate>${rfc822(entry.published)}</pubDate>`,
     ]
-    if (entry.author) lines.push(text('            ', 'dc:creator', entry.author))
-    for (const tag of entry.tags) lines.push(text('            ', 'category', tag))
-    const description = entry.summary || entry.html
-    if (description) lines.push(text('            ', 'description', description))
+    if (entry.author) lines.push(plain('            ', 'dc:creator', entry.author))
+    for (const tag of entry.tags) lines.push(plain('            ', 'category', tag))
+    if (entry.summary) lines.push(plain('            ', 'description', entry.summary))
+    else if (entry.html) lines.push(text('            ', 'description', entry.html))
     if (entry.html !== null) lines.push(text('            ', 'content:encoded', entry.html))
     lines.push('        </item>')
     return lines
@@ -50,9 +57,9 @@ export function buildRss(feed) {
         '<?xml version="1.0" encoding="UTF-8"?>',
         `<rss version="2.0" ${NAMESPACES}>`,
         '    <channel>',
-        text('        ', 'title', feed.title),
+        plain('        ', 'title', feed.title),
         text('        ', 'link', feed.homeUrl),
-        text('        ', 'description', feed.subtitle || feed.title),
+        plain('        ', 'description', feed.subtitle || feed.title),
         text('        ', 'language', feed.lang),
         `        <lastBuildDate>${rfc822(updated)}</lastBuildDate>`,
         `        <atom:link href="${escapeXml(feed.selfUrl)}" rel="self" type="${RSS_TYPE}"/>`,

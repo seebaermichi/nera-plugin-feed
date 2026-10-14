@@ -113,7 +113,7 @@ describe('buildRss', () => {
             '        <lastBuildDate>Mon, 05 Oct 2026 09:30:00 GMT</lastBuildDate>',
             '        <atom:link href="https://example.com/feed.xml" rel="self" type="application/rss+xml"/>',
             '        <item>',
-            '            <title>A &amp; B</title>',
+            '            <title>A &#x26; B</title>',
             '            <link>https://example.com/blog/a.html</link>',
             '            <guid isPermaLink="true">https://example.com/blog/a.html</guid>',
             '            <pubDate>Thu, 01 Oct 2026 00:00:00 GMT</pubDate>',
@@ -133,6 +133,21 @@ describe('buildRss', () => {
         const xml = buildRss(feed())
         expect(xml).toContain('        <description>Demo</description>')
         expect(xml).toContain('            <description>&lt;p&gt;Hi&lt;/p&gt;</description>')
+        expectWellFormed(xml)
+    })
+
+    it('writes & and < in plain-text elements as hexadecimal character references', () => {
+        const xml = buildRss(feed({
+            title: 'Tom & <Jerry>',
+            entries: [entry({ title: 'a < b & c', author: 'A & B', tags: ['x & y'], summary: '1 < 2 & 3' })],
+        }))
+        expect(xml).toContain('        <title>Tom &#x26; &#x3C;Jerry&gt;</title>')
+        expect(xml).toContain('        <description>Tom &#x26; &#x3C;Jerry&gt;</description>')
+        expect(xml).toContain('            <title>a &#x3C; b &#x26; c</title>')
+        expect(xml).toContain('            <dc:creator>A &#x26; B</dc:creator>')
+        expect(xml).toContain('            <category>x &#x26; y</category>')
+        expect(xml).toContain('            <description>1 &#x3C; 2 &#x26; 3</description>')
+        expect(xml).toContain('            <content:encoded>&lt;p&gt;Hi&lt;/p&gt;</content:encoded>')
         expectWellFormed(xml)
     })
 
