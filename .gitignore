@@ -33,3 +33,9 @@ build/
 
 # Test scratch directory
 .tmp/
+
+# Build cache the plugin writes the feeds into (ROADMAP D1)
+.nera-cache/
+
+# Browser-test artifacts (Playwright MCP)
+.playwright-mcp/
