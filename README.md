@@ -97,6 +97,8 @@ Every page then links the feed of its own language, and nothing when its languag
 <link rel="alternate" type="application/atom+xml" href="/de/feed.xml" title="My Nera Site">
 ```
 
+That is the markup in a layout starting with `doctype html`. The layout `nera new` scaffolds starts with a literal `<!DOCTYPE html>` line instead, so Pug writes the same tag self-closed (`<link … />`); browsers and feed readers treat both alike.
+
 The partial renders `app.feeds`, which the plugin fills: for each language with a feed, a list of `{ format, type, href, url, title }`, Atom before RSS. `href` already includes `base_path`, `url` is absolute. Use it for a visible link too, for example in a footer:
 
 ```pug
