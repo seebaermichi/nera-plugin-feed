@@ -1,0 +1,39 @@
+# @nera-static/plugin-feed — every key is optional.
+# Copy this file to your site's config/ folder and edit it there.
+# The site origin comes from `origin` in config/app.yaml (else `app_origin`
+# in config/canonical-links.yaml); without it no feed is written.
+
+# atom (feed.xml), rss (rss.xml, RSS 2.0) or both.
+format: atom
+
+# Posts are the pages whose `layout` is one of these (theme-blog's default).
+layouts:
+    - pages/post.pug
+
+# More pages by logical href (without base_path). "*" matches any characters.
+include: []
+#   - /notes/*
+
+# Pages to leave out by logical href. A page can also set `feed: false`.
+exclude: []
+#   - /blog/drafts/*
+
+# Entries per feed, newest first.
+limit: 20
+
+# full: the post's HTML as entry content; summary: description/lead only.
+content: full
+
+# Feed title, for every language or per language. Default: `name` in
+# config/app.yaml.
+# title: My Blog
+# title:
+#     en: My Blog
+#     de: Mein Blog
+
+# Feed subtitle, a string or per language. Default: the `app_description`
+# translation of the language.
+# subtitle: Notes on things
+
+# The feed's author. Default: `name` in config/app.yaml.
+# author: Jane Doe

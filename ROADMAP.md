@@ -284,7 +284,9 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 4 — Config, guard and hooks
 
-- [ ] `src/config.js`, `src/guard.js`, `src/warn.js`, `src/feeds.js`, `getAppData` (guard + `app.feeds`) and `getAssets` (cache files + entries), `config/feed.yaml`.
+- [x] `src/config.js`, `src/guard.js`, `src/warn.js`, `src/feeds.js`, `getAppData` (guard + `app.feeds`) and `getAssets` (cache files + entries), `config/feed.yaml`.
+
+**Done 2026-10-14.** `src/config.js` follows plugin-sitemap's (`normalizeConfig`, `loadConfig`, `resolveOrigin`), with a `warn` parameter so `getAppData` can read the config silently (D9). `src/guard.js` and `src/warn.js` are plugin-sitemap's with the names changed. `src/feeds.js` holds the output paths, titles, authors, entry view models, `feedLinks` (→ `app.feeds`) and `buildFeeds`. `getAssets` empties `.nera-cache/feed/` before writing, so a feed a language no longer has cannot linger in the cache. A test checks that the packaged `config/feed.yaml` normalizes to exactly the JS defaults.
 
 ### Slice 5 — The `<link>` partial
 
