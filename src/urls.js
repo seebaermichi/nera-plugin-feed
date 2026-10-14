@@ -17,7 +17,11 @@ const XML_ENTITIES = {
 // Characters XML 1.0 does not allow anywhere in a document, not even
 // escaped: C0 controls other than tab, LF and CR, lone surrogates, and
 // U+FFFE/U+FFFF (D7).
-const XML_INVALID = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g
+const XML_INVALID = new RegExp([
+    '[\\u0000-\\u0008\\u000B\\u000C\\u000E-\\u001F\\uFFFE\\uFFFF]',
+    '[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])',
+    '(?<![\\uD800-\\uDBFF])[\\uDC00-\\uDFFF]',
+].join('|'), 'g')
 
 /**
  * The site origin without trailing slashes, or '' when it is not a

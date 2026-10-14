@@ -55,7 +55,10 @@ function reportMismatch(linked, written) {
     const fix = 'A plugin running after plugin-feed changed the posts; list ' +
         'plugin-feed under `end:` in config/plugin-order.yaml.'
     if (missing.length > 0) {
-        warn(`pages link a feed for ${missing.join(', ')}, but it has no entries, so no feed was written. ${fix}`)
+        warn(
+            `pages link a feed for ${missing.join(', ')}, but it has no entries, ` +
+                `so no feed was written. ${fix}`
+        )
     }
     if (unlinked.length > 0) {
         warn(`a feed was written for ${unlinked.join(', ')}, but no page links it. ${fix}`)
@@ -84,7 +87,8 @@ export function getAssets({ app = {}, pagesData = [] } = {}) {
     if (badLanguage.length > 0) {
         warn(
             'left out of the feed, because their language is not a language tag such as ' +
-                `en or pt-BR: ${badLanguage.join(', ')}. Fix \`lang\` in their frontmatter or config/app.yaml.`
+                `en or pt-BR: ${badLanguage.join(', ')}. ` +
+                'Fix `lang` in their frontmatter or config/app.yaml.'
         )
     }
     if (groups.size === 0 && undated.length === 0 && badLanguage.length === 0) {
