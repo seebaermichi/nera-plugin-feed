@@ -72,13 +72,18 @@ wanted:
 - Boot (a throwaway site with the *local* plugin, never from npm):
   `R=$PWD; T=$(mktemp -d) && cd "$T" && npx @nera-static/nera new site --no-install && cd site && npm install && npm install "$R" && npx nera build && npx nera serve --port 3124`
   (Node 22 if npm crashes: `PATH=~/.nvm/versions/node/v22.22.0/bin:$PATH`). Delete
-  `$T` afterwards.
+  `$T` afterwards. The scaffold has no `origin` and no post, so before `nera build`
+  add `origin: http://localhost:3124` to `config/app.yaml`, copy
+  `theme/views/pages/default.pug` to `theme/views/pages/post.pug`, add a page with
+  `layout: pages/post.pug` and `date:`, run `npx nera-feed` and add
+  `include ../vendor/plugin-feed/feed-link` to the `head` of
+  `theme/views/layouts/layout.pug` (ROADMAP D3, D9).
 - Base URL / login: http://localhost:3124/, no login.
 - Surfaces:
     | surface | url | role | how to open |
     |---|---|---|---|
-    | generated feed(s), one per language | the paths the ROADMAP decides | feed reader | open the URL |
-    | `<link rel="alternate">` in the page head (if the ROADMAP ships it) | `/` | browser | view source |
+    | generated feed(s), one per language | `/feed.xml`, `/<lang>/feed.xml`; `/rss.xml`, `/<lang>/rss.xml` with `format: rss`/`both` (ROADMAP D5, D6) | feed reader | open the URL |
+    | `<link rel="alternate">` in the page head (`views/feed-link.pug`, D9) | `/` | browser | view source |
 
 ## Tests & hygiene
 
