@@ -1,7 +1,8 @@
 import fs from 'fs'
 import os from 'os'
 import path from 'path'
-import { afterAll, vi } from 'vitest'
+import { afterAll, expect, vi } from 'vitest'
+import { XMLValidator } from 'fast-xml-parser'
 import run from '@nera-static/core'
 
 export const write = (file, content) => {
@@ -59,4 +60,22 @@ export async function build(root) {
         log.mockRestore()
         warn.mockRestore()
     }
+}
+
+// What fast-xml-parser's validator lets through but XML 1.0 forbids: a
+// character outside the Char production, and an entity reference other
+// than the five predefined ones or a numeric one.
+const XML_INVALID_CHAR = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/
+const UNDEFINED_ENTITY = /&(?!(?:amp|lt|gt|apos|quot|#\d+|#x[0-9A-Fa-f]+);)/
+
+/**
+ * Fail the test unless `xml` is a well-formed XML document (ROADMAP slice 3):
+ * fast-xml-parser's validator, plus the two checks above.
+ *
+ * @param {string} xml
+ */
+export function expectWellFormed(xml) {
+    expect(XMLValidator.validate(xml)).toBe(true)
+    expect(xml).not.toMatch(XML_INVALID_CHAR)
+    expect(xml).not.toMatch(UNDEFINED_ENTITY)
 }

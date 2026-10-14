@@ -101,7 +101,7 @@ Duplicate `href`s keep the first in `pagesData` order. Entries are sorted newest
 ### D4 — Dates only from authored frontmatter
 
 - **Published** (`<published>`, RSS `<pubDate>`): frontmatter `date`, else `published`. `createdAt` is **never** used — core may have filled it from the file's birth time, which CI stamps the same on every file. `published` is supported because it is Atom's own name and common in imported posts; it is the second choice, so theme-blog's `date` wins.
-- **Updated** (`<updated>`): `updated` (theme-blog's key), else `lastmod`, else `updatedAt` (plugin-sitemap's keys), else the published date.
+- **Updated** (`<updated>`): `updated` (theme-blog's key), else `lastmod`, else `updatedAt` (plugin-sitemap's keys), else the published date. An updated date before the published one is taken for a typo and the published date is used.
 - A usable date is a valid `Date` (what YAML makes of an unquoted date), or a string `YYYY-MM-DD`, optionally followed by `T` or a space, `hh:mm`, optional `:ss` and fraction, and an optional `Z`/`±hh:mm` offset; a date-only string or one without an offset is read as UTC (as YAML does for unquoted values). Anything else does not count; an unusable `updated` falls through to the next key.
 - Atom dates are RFC 3339 in UTC without milliseconds (`2026-10-01T00:00:00Z`); RSS dates are RFC 822 (`Thu, 01 Oct 2026 00:00:00 GMT`, `Date#toUTCString`).
 - The feed-level `<updated>` (RSS `<lastBuildDate>`) is the newest entry's updated date — never "now" — so the same site gives a byte-identical feed.
@@ -278,7 +278,9 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 3 — Pure builders
 
-- [ ] `src/urls.js`, `src/dates.js`, `src/text.js`, `src/content.js`, `src/entries.js`, `src/atom.js`, `src/rss.js`, unit-tested; every generated feed checked for well-formedness by an XML parser in the tests.
+- [x] `src/urls.js`, `src/dates.js`, `src/content.js`, `src/entries.js`, `src/atom.js`, `src/rss.js`, unit-tested; every generated feed checked for well-formedness by an XML parser in the tests.
+
+**Done 2026-10-14.** `src/urls.js` is plugin-sitemap's (`trimOrigin`, `encodePath`, `joinUrl`, `matchesPattern`; its `isExcluded` is `matchesAny` here, since `include` uses it too), and `escapeXml` also drops the characters XML 1.0 forbids (D7). `collectEntries` returns the groups plus the `undated` and `badLanguage` hrefs, so the builder stays free of console output and the hook warns once. `toDate` refuses calendar dates that do not exist (`2026-02-30`), which `Date` would roll over. The serializers take a resolved view model (absolute URLs, plain text) and escape everything themselves. `test/helpers.js` gained `expectWellFormed`: fast-xml-parser's `XMLValidator` (a devDependency) plus two checks it does not make — forbidden characters and undefined entity references such as `&nbsp;`.
 
 ### Slice 4 — Config, guard and hooks
 
