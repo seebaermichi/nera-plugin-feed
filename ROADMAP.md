@@ -140,7 +140,7 @@ A page's language is `meta.lang`, else `app.lang`, else `en` (when `app.lang` is
 
 `getAppData` sees `pagesData` before the `getMetaData` of the plugins ordered after this one, so pages those plugins add or remove are not counted there; their content is irrelevant to the decision. `getAssets` sees the final list and warns when the two disagree (a language linked but without a feed file, or a feed written but not linked), naming the language and pointing at `config/plugin-order.yaml`. With no origin `app.feeds` is `{}`. The hook never fails on config: it reads the config silently and `getAssets` reports the problems, so each warning appears once.
 
-`views/feed-link.pug` renders one `<link rel="alternate" type="…" href="…" title="…">` per feed of the **current page's** language (`meta.lang || app.lang || 'en'`), nothing when there is none. No classes (head links need none). Published with `npm run publish-template` (or `npx nera-feed`) to `views/vendor/plugin-feed/feed-link.pug`; a layout includes it in its `<head>`, and theme-blog's `partials/feed-link.pug` seam can be a one-line include of it.
+`views/feed-link.pug` renders one `<link rel="alternate" type="…" href="…" title="…">` per feed of the **current page's** language (`meta.lang || app.lang || 'en'`), nothing when there is none. No classes (head links need none). Published from the site with `npx nera-feed` (the package's `bin`, which the plugin repo also runs as `npm run publish-template`) to `views/vendor/plugin-feed/feed-link.pug`; a layout includes it in its `<head>`, and theme-blog's `partials/feed-link.pug` seam can be a one-line include of it.
 
 ### D10 — Config (all optional)
 
@@ -305,7 +305,53 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 ### Slice 7 — README, CHANGELOG, release preparation
 
-- [ ] README, `CHANGELOG.md` `## [1.0.0]`, `npm pack --dry-run`, catalog snippets, release handover.
+- [x] README, `CHANGELOG.md` `## [1.0.0]`, `npm pack --dry-run`, catalog snippets, release handover.
+
+**Done 2026-10-14.** README follows plugin-sitemap's (badges, nera.js.org link, Compatibility, Development, License) plus the partial, `app.feeds`, dates, content, multilingual, `base_path` and plugin-order sections; its example feed is the output of a build of the `nera new` scaffold's `config/app.yaml` plus an `origin` (hence the `<subtitle>` from `app_description`). Template publishing is documented as `npx nera-feed`, like plugin-tags' `npx nera-tags`. `CHANGELOG.md` carries `## [1.0.0] - 2026-10-14`. `npm pack --dry-run` ships `index.js`, `src/`, `config/`, `views/`, `bin/`, `README.md`, `CHANGELOG.md`, `LICENSE`, `package.json` only. The catalog entries and the handover are below; nothing was published, tagged, pushed to `main` or committed outside this repo.
+
+#### Release handover
+
+Not run by the session (never publish, tag or push `main`). In order:
+
+1. Review and merge the branch `issue/01a1260d-feed-plugin` into `main` and push `main`. Then `generator/scripts/fleet-check.sh --fix nera-plugin-feed` from the workspace root, and secure the repo like the fleet (`protect-main` ruleset, secret scanning + push protection, private vulnerability reporting, Dependabot alerts and security updates; `.github/dependabot.yml` is already in the repo).
+2. Bootstrap-publish 1.0.0 by hand from this repo: `npm ci && npx vitest run && npm run lint && npm publish --access public`, then `git tag -a v1.0.0 -m v1.0.0 && git push origin v1.0.0` (the tag's CI publish fails on the existing version; that is expected).
+3. On npmjs.com, add the Trusted Publisher: repository `seebaermichi/nera-plugin-feed`, workflow `publish.yml`.
+4. Within ~2 days, a real CI release so the Trusted Publisher does not expire: a patch change with its CHANGELOG entry, `npm version patch --no-git-tag-version`, commit, then `git tag -a v1.0.1 -m v1.0.1 && git push origin main v1.0.1`.
+5. Catalog entries (below) in `generator/PLUGINS.md` and the three `nera-website` pages; `nera build` + `nera validate` in `nera-website`, then push.
+6. `nera-cli/ROADMAP-ai.md` L8: point to this ROADMAP and record the release. The blog starter can then fill theme-blog's `partials/feed-link.pug` seam with `include ../vendor/plugin-feed/feed-link`.
+
+`generator/PLUGINS.md` — after "Contact form", before "Images", and the heading becomes `## List of plugins (18)`:
+
+```markdown
+-   [Feed](https://github.com/seebaermichi/nera-plugin-feed)
+```
+
+`nera-website/pages/plugins/index.md` — after "Contact form" in the `plugins:` list:
+
+```yaml
+    - name: Feed
+      package: '@nera-static/plugin-feed'
+      description: Generates an Atom or RSS feed of your blog posts, one per language, and a link tag for the page head.
+      url: https://github.com/seebaermichi/nera-plugin-feed
+```
+
+`nera-website/pages/de/plugins/index.md`, same place:
+
+```yaml
+    - name: Feed
+      package: '@nera-static/plugin-feed'
+      description: Generiert einen Atom- oder RSS-Feed der Blogbeiträge, einen pro Sprache, und ein Link-Tag für den Seitenkopf.
+      url: https://github.com/seebaermichi/nera-plugin-feed
+```
+
+`nera-website/pages/es/plugins/index.md`, same place:
+
+```yaml
+    - name: Feed
+      package: '@nera-static/plugin-feed'
+      description: Genera un feed Atom o RSS de las entradas del blog, uno por idioma, y una etiqueta link para la cabecera de la página.
+      url: https://github.com/seebaermichi/nera-plugin-feed
+```
 
 ---
 
@@ -331,5 +377,5 @@ Public contract: the config keys and their defaults, the output paths, the XML s
 - [x] The repo has its own `ROADMAP.md` as the plugin's spec (L8 points to it — the pointer in `nera-cli/ROADMAP-ai.md` is part of the release handover).
 - [x] A site depending on the plugin gets one valid Atom feed per language with absolute, escaped, `base_path`-aware URLs, RSS 2.0 on request (slice 6's integration test).
 - [x] Pages link their language's feed through the published partial (D9).
-- [ ] The package matches the fleet (CI workflows, LICENSE, README linking nera.js.org, CHANGELOG, `files`).
-- [ ] The PLUGINS.md and three website catalog entries are prepared for the release handover (slice 7).
+- [x] The package matches the fleet (CI workflows, LICENSE, README linking nera.js.org, CHANGELOG, `files`); publishing is the release handover's.
+- [x] The PLUGINS.md and three website catalog entries are prepared for the release handover (slice 7).
