@@ -315,6 +315,8 @@ Each slice is one step of the cloud brief's plan (`plans/cloud/01a1260d-904a-70a
 
 #### Release handover
 
+**Released 2026-10-14.** The hand publish of 1.0.0 landed as a *staged* version, so the `v1.0.0` tag's CI run failed with `E409 Cannot publish over previously staged version "1.0.0"` (expected either way); 1.0.0 was then promoted on npmjs.com. 1.0.1 (a README note) was the first CI OIDC publish and validates the Trusted Publisher. The repo is secured like the fleet (`fleet-check.sh --fix`, private vulnerability reporting, Dependabot alerts and fixes, Sponsorships), and the plugin is listed in `generator/PLUGINS.md` (18) and the three `nera-website` catalog pages. The steps below are kept as the record.
+
 Not run by the session (never publish, tag or push `main`). In order:
 
 1. Review and merge the branch `issue/01a1260d-feed-plugin` into `main` and push `main`. Then `generator/scripts/fleet-check.sh --fix nera-plugin-feed` from the workspace root, and secure the repo like the fleet (`protect-main` ruleset, secret scanning + push protection, private vulnerability reporting, Dependabot alerts and security updates; `.github/dependabot.yml` is already in the repo).
