@@ -1,6 +1,6 @@
 {
     "name": "@nera-static/plugin-feed",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "A plugin for Nera static site generator to generate an Atom (or RSS 2.0) feed of a site's blog posts, one feed per language.",
     "main": "index.js",
     "scripts": {

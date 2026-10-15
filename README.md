@@ -13,7 +13,7 @@ A plugin for the [Nera](https://github.com/seebaermichi/nera) static site genera
 
 - One feed per language: `/feed.xml` for the site's language, `/de/feed.xml` for German posts, and so on. Never one mixed feed
 - Atom by default, RSS 2.0 (`rss.xml`) or both with one config key
-- Posts are the pages with the `pages/post.pug` layout (the same rule as the planned `@nera-static/theme-blog`), newest first, at most 20 per feed
+- Posts are the pages with the `pages/post.pug` layout (the same rule as [`@nera-static/theme-blog`](https://www.npmjs.com/package/@nera-static/theme-blog)), newest first, at most 20 per feed
 - The post's full HTML as entry content, with every link and image URL made absolute and `base_path`-aware
 - Dates only from the frontmatter, never from file dates, and no build time in the output, so the same site gives a byte-identical feed
 - A `<link rel="alternate">` partial that links the feed of the page's own language
@@ -223,7 +223,7 @@ plugin-order:
 
 - **`@nera-static/core` 4.13.0 or later** (the `getAssets` hook, through which the feeds reach `public/`). On an older core the build stops with a message naming the required version, rather than exiting cleanly without a feed.
 - Node.js 20.19.0 or later (or 22.0.0 or later), like `@nera-static/core`.
-- Made for the planned `@nera-static/theme-blog`: it uses the same post rule, and its empty `partials/feed-link.pug` is the place for `include ../vendor/plugin-feed/feed-link`.
+- Made for [`@nera-static/theme-blog`](https://www.npmjs.com/package/@nera-static/theme-blog) (1.0.1 or later documents it): it uses the same post rule, and a site fills the theme's empty `feed-link.pug` seam by putting `include /vendor/plugin-feed/feed-link` into its own `theme/views/partials/feed-link.pug`.
 
 ## 🧪 Development
 
