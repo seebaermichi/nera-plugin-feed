@@ -232,7 +232,7 @@ npx vitest run
 npm run lint
 ```
 
-`npm test` runs Vitest in watch mode. The integration tests build throwaway sites with the real `@nera-static/core` in a temp directory, and every generated feed is checked with an XML parser. `ROADMAP.md` records the design decisions behind the plugin.
+`npm test` runs Vitest in watch mode. The integration tests build throwaway sites with the real `@nera-static/core` in a temp directory, and every generated feed is checked with an XML parser.
 
 ## 📦 License
 
